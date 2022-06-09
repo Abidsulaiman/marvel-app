@@ -7,6 +7,12 @@ Next.js gives you the best developer experience with all the features you need f
 # tailwind css
 A utility-first CSS framework packed with classes like flex, pt-4, text-center and rotate-90 that can be composed to build any design, directly in your markup.
 
+# SWR
+The name “SWR” is derived from stale-while-revalidate, a HTTP cache invalidation strategy popularized by HTTP RFC 5861. SWR is a strategy to first return the data from cache (stale), then send the fetch request (revalidate), and finally come with the up-to-date data.
+
+With SWR, components will get a stream of data updates constantly and automatically.
+And the UI will be always fast and reactive.
+
 # API used
 https://developer.marvel.com/
 
