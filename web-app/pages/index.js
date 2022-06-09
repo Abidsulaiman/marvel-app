@@ -1,12 +1,34 @@
-import { useHeros } from "../hooks/useHeros";
 import CharacterGrid from "../components/CharacterGrid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SiteHeader from "../components/SiteHeader";
 import InputSearch from "../components/UI/InputSearch";
+import axios from "axios";
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { data, isLoading, isError } = useHeros(searchTerm);
+  const [fetching, setIsFetching] = useState(true);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      fetchData();
+    }, 2000);
+
+    const fetchData = async () => {
+      setIsFetching(true);
+      try {
+        const { data } = await axios.post("/api/marvel_api", { searchTerm });
+
+        setData(data?.data?.results);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    return () => clearTimeout(timeout);
+  }, [searchTerm]);
 
   return (
     <div>
@@ -17,19 +39,15 @@ export default function Home() {
           Welcome to <span className="text-red-600">Marvel World!</span>
         </h1>
 
-        {isError && (
-          <p className="text-red-600 text-center">{isError?.message}</p>
-        )}
-
         <InputSearch
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
 
-        {isLoading ? (
+        {fetching ? (
           "Loading..."
-        ) : data?.results?.length > 0 ? (
-          <CharacterGrid items={data?.results} />
+        ) : data?.length > 0 ? (
+          <CharacterGrid items={data} />
         ) : (
           "No characters found"
         )}
